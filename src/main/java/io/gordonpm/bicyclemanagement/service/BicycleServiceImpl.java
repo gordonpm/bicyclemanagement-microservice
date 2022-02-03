@@ -27,4 +27,14 @@ public class BicycleServiceImpl implements BicycleService{
     public void addBicycle(Bicycle bicycle) {
         bicycleRepository.addBicycle(bicycle);
     }
+
+    @Override
+    public boolean updateBicycle(String id, Bicycle bicycle) {
+        return bicycleRepository.updateBicycle(id, bicycle);
+    }
+
+    @Override
+    public boolean deleteBicycle(String id) {
+        return bicycleRepository.deleteBicycle(id);
+    }
 }

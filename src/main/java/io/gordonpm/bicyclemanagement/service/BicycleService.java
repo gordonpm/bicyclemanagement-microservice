@@ -10,4 +10,8 @@ public interface BicycleService {
     Bicycle getBicycle(String id);
 
     void addBicycle(Bicycle bicycle);
+
+    boolean updateBicycle(String id, Bicycle bicycle);
+
+    boolean deleteBicycle(String id);
 }

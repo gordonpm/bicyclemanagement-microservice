@@ -6,6 +6,13 @@ public class Bicycle {
     private String name;
     private double price;
 
+    public Bicycle(String id, String vendor, String name, double price) {
+        this.id = id;
+        this.vendor = vendor;
+        this.name = name;
+        this.price = price;
+    }
+
     public String getId() {
         return id;
     }

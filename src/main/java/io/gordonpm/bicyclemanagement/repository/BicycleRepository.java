@@ -11,6 +11,7 @@ import java.util.Optional;
 public class BicycleRepository {
 
     List<Bicycle> bicycleList = new ArrayList<>();
+
     public List<Bicycle> getAllBicycles() {
         return bicycleList;
     }
@@ -22,11 +23,36 @@ public class BicycleRepository {
         if (first.isPresent()) {
             return first.get();
         } else {
-            return new Bicycle();
+            return null;
         }
     }
 
     public void addBicycle(Bicycle bicycle) {
         bicycleList.add(bicycle);
+    }
+
+    public boolean updateBicycle(String id, Bicycle bicycle) {
+        for (Bicycle b : bicycleList) {
+            if (b.getId().equals(id)) {
+                b.setVendor(bicycle.getVendor());
+                b.setName(bicycle.getName());
+                b.setPrice(bicycle.getPrice());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteBicycle(String id) {
+        Optional<Bicycle> first = bicycleList.stream()
+                .filter(b -> b.getId().equals(id))
+                .findFirst();
+        if (first.isPresent()) {
+            Bicycle bicycle = first.get();
+            bicycleList.remove(bicycle);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
