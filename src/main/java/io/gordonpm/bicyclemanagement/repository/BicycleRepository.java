@@ -31,16 +31,16 @@ public class BicycleRepository {
         bicycleList.add(bicycle);
     }
 
-    public boolean updateBicycle(String id, Bicycle bicycle) {
+    public Bicycle updateBicycle(String id, Bicycle bicycle) {
         for (Bicycle b : bicycleList) {
             if (b.getId().equals(id)) {
                 b.setVendor(bicycle.getVendor());
                 b.setName(bicycle.getName());
                 b.setPrice(bicycle.getPrice());
-                return true;
+                return b;
             }
         }
-        return false;
+        return null;
     }
 
     public boolean deleteBicycle(String id) {

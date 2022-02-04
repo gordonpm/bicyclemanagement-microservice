@@ -29,7 +29,7 @@ public class BicycleServiceImpl implements BicycleService{
     }
 
     @Override
-    public boolean updateBicycle(String id, Bicycle bicycle) {
+    public Bicycle updateBicycle(String id, Bicycle bicycle) {
         return bicycleRepository.updateBicycle(id, bicycle);
     }
 

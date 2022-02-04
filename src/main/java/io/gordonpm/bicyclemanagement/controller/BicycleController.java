@@ -18,11 +18,12 @@ public class BicycleController {
     @Autowired
     private BicycleService bicycleService;
 
+
     @PostConstruct
     public void initBicycles() {
         Bicycle trekBicycle = new Bicycle("100", "Trek", "Emonda SLR6", 6699.99);
         Bicycle bianchiBicycle = new Bicycle("200", "Bianchi", "Infinito XE 11SP", 3675.00);
-        Bicycle canyonBicycle = new Bicycle("300", "Canyon", "Endurace CF SL 8 Disc", 3499.00);
+        Bicycle canyonBicycle = new Bicycle("300", "Canyon", "Endurance CF SL 8 Disc", 3499.00);
 
         bicycleService.addBicycle(trekBicycle);
         bicycleService.addBicycle(bianchiBicycle);
@@ -44,7 +45,7 @@ public class BicycleController {
     }
 
     @PostMapping("/bicycles")
-    public ResponseEntity<Object> addBicycle(@RequestBody Bicycle bicycle) {
+    public ResponseEntity<?> addBicycle(@RequestBody Bicycle bicycle) {
         bicycleService.addBicycle(bicycle);
         URI path = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -55,11 +56,12 @@ public class BicycleController {
 
     @PutMapping("/bicycles/{id}")
     public ResponseEntity<?> updateBicycle(@PathVariable String id, @RequestBody Bicycle bicycle) {
-        boolean isFound = bicycleService.updateBicycle(id, bicycle);
-        if (!isFound) {
+        Bicycle updatedBicycle = bicycleService.updateBicycle(id, bicycle);
+        if (updatedBicycle != null) {
+            return new ResponseEntity<>(bicycle, HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(bicycle, HttpStatus.OK);
     }
 
     @DeleteMapping("/bicycles/{id}")

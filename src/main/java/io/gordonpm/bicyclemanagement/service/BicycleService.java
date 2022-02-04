@@ -11,7 +11,7 @@ public interface BicycleService {
 
     void addBicycle(Bicycle bicycle);
 
-    boolean updateBicycle(String id, Bicycle bicycle);
+    Bicycle updateBicycle(String id, Bicycle bicycle);
 
     boolean deleteBicycle(String id);
 }
