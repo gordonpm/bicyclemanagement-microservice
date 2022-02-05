@@ -2,6 +2,7 @@ package io.gordonpm.bicyclemanagement.controller;
 
 import io.gordonpm.bicyclemanagement.dto.Bicycle;
 import io.gordonpm.bicyclemanagement.service.BicycleService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,6 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,13 +34,14 @@ public class BicycleControllerTest {
     @MockBean
     private BicycleService bicycleService;
 
-    private Bicycle mockBicycle = new Bicycle("500", "Orbea", "Orca", 2000.00);
+    private Bicycle mockBicycle1 = new Bicycle("500", "Orbea", "Orca", 2000.00);
+    private Bicycle mockBicycle2 = new Bicycle("600", "Trek", "Domane", 5000.00);
 
     @Test
     @DisplayName("Test for getting bicycle details by id")
     public void getBicycleByIdTest() throws Exception {
         Mockito.when(bicycleService.getBicycle("500"))
-               .thenReturn(mockBicycle);
+               .thenReturn(mockBicycle1);
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get("/bicycles/500")
                 .accept(MediaType.APPLICATION_JSON);
@@ -52,7 +57,7 @@ public class BicycleControllerTest {
 
     @Test
     @DisplayName("Test for 404 status code when bicycle id not found")
-    public void getBicycleByIdNotFound() throws Exception {
+    public void getBicycleByIdNotFoundTest() throws Exception {
         Mockito.when(bicycleService.getBicycle("400"))
                 .thenReturn(null);
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -63,5 +68,23 @@ public class BicycleControllerTest {
         logger.info(String.valueOf(result.getResponse().getStatus()));
 
         assertThat(result.getResponse().getStatus()).isEqualTo(404);
+    }
+
+    @Test
+    @DisplayName("Test for getting all bicycles")
+    public void getAllBicyclesTest() throws Exception {
+        Mockito.when(bicycleService.getAllBicycles())
+                .thenReturn(Arrays.asList(mockBicycle1, mockBicycle2));
+        mockMvc.perform(MockMvcRequestBuilders.get("/bicycles"))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is("500")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].vendor", Matchers.is("Orbea")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is("Orca")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].price", Matchers.is(2000.00)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id", Matchers.is("600")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].vendor", Matchers.is("Trek")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is("Domane")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].price", Matchers.is(5000.00)));
     }
 }
