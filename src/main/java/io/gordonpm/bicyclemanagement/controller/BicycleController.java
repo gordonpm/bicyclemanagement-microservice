@@ -45,8 +45,8 @@ public class BicycleController {
     }
 
     @PostMapping("/bicycles")
-    public ResponseEntity<?> addBicycle(@RequestBody Bicycle bicycle) {
-        bicycleService.addBicycle(bicycle);
+    public ResponseEntity<?> addBicycle(@RequestBody Bicycle newBicycle) {
+        Bicycle bicycle = bicycleService.addBicycle(newBicycle);
         URI path = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(bicycle.getId())

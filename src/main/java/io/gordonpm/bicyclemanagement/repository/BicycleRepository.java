@@ -27,8 +27,10 @@ public class BicycleRepository {
         }
     }
 
-    public void addBicycle(Bicycle bicycle) {
-        bicycleList.add(bicycle);
+    public Bicycle addBicycle(Bicycle bicycle) {
+        if (bicycleList.add(bicycle))
+            return bicycle;
+        else return null;
     }
 
     public Bicycle updateBicycle(String id, Bicycle bicycle) {

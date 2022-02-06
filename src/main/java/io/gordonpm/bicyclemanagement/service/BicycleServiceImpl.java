@@ -24,8 +24,8 @@ public class BicycleServiceImpl implements BicycleService{
     }
 
     @Override
-    public void addBicycle(Bicycle bicycle) {
-        bicycleRepository.addBicycle(bicycle);
+    public Bicycle addBicycle(Bicycle bicycle) {
+        return bicycleRepository.addBicycle(bicycle);
     }
 
     @Override

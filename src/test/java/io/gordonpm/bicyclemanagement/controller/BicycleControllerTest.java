@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -24,7 +26,7 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@WebMvcTest
+@WebMvcTest()
 public class BicycleControllerTest {
     Logger logger = LoggerFactory.getLogger(BicycleControllerTest.class);
 
@@ -86,5 +88,56 @@ public class BicycleControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].vendor", Matchers.is("Trek")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is("Domane")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].price", Matchers.is(5000.00)));
+    }
+
+    @Test
+    @DisplayName("Test for creating new bicycle")
+    public void createNewBicycleTest() throws Exception {
+        String bicycleJson = "{\"id\":\"500\",\"vendor\":\"Orbea\",\"name\":\"Orca\",\"price\":2000.00}";
+        Mockito.when(bicycleService.addBicycle(Mockito.any(Bicycle.class)))
+                .thenReturn(mockBicycle1);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/bicycles")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(bicycleJson)
+                .contentType(MediaType.APPLICATION_JSON);
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        MockHttpServletResponse response = result.getResponse();
+
+        logger.info(String.valueOf(response.getStatus()));
+
+        assertThat(response.getStatus()).isEqualTo(201);
+        assertEquals("http://localhost/bicycles/500",
+                response.getHeader(HttpHeaders.LOCATION));
+    }
+
+    @Test
+    @DisplayName("Test for updating existing bicycle")
+    public void updateBicycleTest() throws Exception {
+        String bicycleJson = "{\"id\":\"500\",\"vendor\":\"Orbea\",\"name\":\"Orca\",\"price\":2500.00}"; // updated price
+        Mockito.when(bicycleService.updateBicycle(Mockito.anyString(), Mockito.any(Bicycle.class)))
+                .thenReturn(mockBicycle1);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put("/bicycles/500")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(bicycleJson)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        logger.info("mock price = " + mockBicycle2.getPrice());
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is("500")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.vendor", Matchers.is("Orbea")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("Orca")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.price", Matchers.is(2500.00)));
+    }
+
+    @Test
+    @DisplayName("Test for deleting existing bicycle")
+    public void deleteBicycleTest() throws Exception {
+        Mockito.when(bicycleService.deleteBicycle("500"))
+                .thenReturn(true);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/bicycles/500"))
+                .andExpect(MockMvcResultMatchers.status().is(204));
     }
 }

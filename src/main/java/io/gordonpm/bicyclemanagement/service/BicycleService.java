@@ -9,7 +9,7 @@ public interface BicycleService {
 
     Bicycle getBicycle(String id);
 
-    void addBicycle(Bicycle bicycle);
+    Bicycle addBicycle(Bicycle bicycle);
 
     Bicycle updateBicycle(String id, Bicycle bicycle);
 
