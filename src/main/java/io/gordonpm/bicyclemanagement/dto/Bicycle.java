@@ -1,9 +1,20 @@
 package io.gordonpm.bicyclemanagement.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+
 public class Bicycle {
+
+    @NotEmpty(message = "Id of bicycle cannot be empty")
     private String id;
+
+    @NotEmpty(message = "Vendor of bicycle cannot be empty")
     private String vendor;
+
+    @NotEmpty(message = "Name of bicycle cannot be empty")
     private String name;
+
+    @Positive(message = "Price of bicycle has to be greater than 0")
     private double price;
 
     public Bicycle(String id, String vendor, String name, double price) {

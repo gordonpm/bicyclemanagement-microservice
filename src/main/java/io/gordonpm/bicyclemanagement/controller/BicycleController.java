@@ -5,14 +5,17 @@ import io.gordonpm.bicyclemanagement.service.BicycleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
 @RestController
+@Validated
 public class BicycleController {
 
     @Autowired
@@ -38,24 +41,29 @@ public class BicycleController {
     @GetMapping("/bicycles/{id}")
     public ResponseEntity<?> getBicycle(@PathVariable String id) {
         Bicycle bicycle = bicycleService.getBicycle(id);
-        if (bicycle == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (bicycle != null) {
+            return new ResponseEntity<>(bicycle, HttpStatus.OK);
         }
-        return new ResponseEntity<>(bicycle, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/bicycles")
-    public ResponseEntity<?> addBicycle(@RequestBody Bicycle newBicycle) {
+    public ResponseEntity<?> addBicycle(@RequestBody @Valid Bicycle newBicycle) {
         Bicycle bicycle = bicycleService.addBicycle(newBicycle);
-        URI path = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(bicycle.getId())
-                .toUri();
-        return ResponseEntity.created(path).build();
+
+        if (bicycle != null) {
+            URI path = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(bicycle.getId())
+                    .toUri();
+            return ResponseEntity.created(path).build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/bicycles/{id}")
-    public ResponseEntity<?> updateBicycle(@PathVariable String id, @RequestBody Bicycle bicycle) {
+    public ResponseEntity<?> updateBicycle(@PathVariable String id, @RequestBody @Valid Bicycle bicycle) {
         Bicycle updatedBicycle = bicycleService.updateBicycle(id, bicycle);
         if (updatedBicycle != null) {
             return new ResponseEntity<>(bicycle, HttpStatus.OK);

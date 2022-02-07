@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WebMvcTest()
 public class BicycleControllerTest {
-    Logger logger = LoggerFactory.getLogger(BicycleControllerTest.class);
+    private final Logger logger = LoggerFactory.getLogger(BicycleControllerTest.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,8 +36,8 @@ public class BicycleControllerTest {
     @MockBean
     private BicycleService bicycleService;
 
-    private Bicycle mockBicycle1 = new Bicycle("500", "Orbea", "Orca", 2000.00);
-    private Bicycle mockBicycle2 = new Bicycle("600", "Trek", "Domane", 5000.00);
+    private final Bicycle mockBicycle1 = new Bicycle("500", "Orbea", "Orca", 2000.00);
+    private final Bicycle mockBicycle2 = new Bicycle("600", "Trek", "Domane", 5000.00);
 
     @Test
     @DisplayName("Test for getting bicycle details by id")
@@ -112,18 +112,37 @@ public class BicycleControllerTest {
     }
 
     @Test
+    @DisplayName("Negative test for creating new bicycle with empty name")
+    public void createNewBicycleWithInvalidNameTest() throws Exception {
+        final String bicycleJson = "{\"id\":\"500\",\"vendor\":\"Orbea\",\"name\":\"\",\"price\":2200.00}";
+        Mockito.when(bicycleService.addBicycle(Mockito.any(Bicycle.class)))
+                .thenReturn(null);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/bicycles")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(bicycleJson)
+                .contentType(MediaType.APPLICATION_JSON);
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        MockHttpServletResponse response = result.getResponse();
+
+        logger.info(String.valueOf(response.getStatus()));
+
+        assertThat(response.getStatus()).isEqualTo(400);
+    }
+
+    @Test
     @DisplayName("Test for updating existing bicycle")
     public void updateBicycleTest() throws Exception {
-        String bicycleJson = "{\"id\":\"500\",\"vendor\":\"Orbea\",\"name\":\"Orca\",\"price\":2500.00}"; // updated price
+        final String bicycleJson = "{\"id\":\"500\",\"vendor\":\"Orbea\",\"name\":\"Orca\",\"price\":2500.00}"; // updated price
+        final Bicycle mockUpdatedBicycle = new Bicycle("500", "Orbea", "Orca", 2500.00);
         Mockito.when(bicycleService.updateBicycle(Mockito.anyString(), Mockito.any(Bicycle.class)))
-                .thenReturn(mockBicycle1);
+                .thenReturn(mockUpdatedBicycle);
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .put("/bicycles/500")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(bicycleJson)
                 .contentType(MediaType.APPLICATION_JSON);
 
-        logger.info("mock price = " + mockBicycle2.getPrice());
         mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is("500")))
@@ -139,5 +158,14 @@ public class BicycleControllerTest {
                 .thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.delete("/bicycles/500"))
                 .andExpect(MockMvcResultMatchers.status().is(204));
+    }
+
+    @Test
+    @DisplayName("Test for deleting bicycle which does not exit")
+    public void deleteUnknownBicycleTest() throws Exception {
+        Mockito.when(bicycleService.deleteBicycle("500"))
+                .thenReturn(false);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/bicycles/500"))
+                .andExpect(MockMvcResultMatchers.status().is(404));
     }
 }
