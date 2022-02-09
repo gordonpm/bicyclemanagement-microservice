@@ -210,6 +210,82 @@ public class BicycleControllerTest {
     }
 
     @Test
+    @DisplayName("Negative test for updating existing bicycle with empty name")
+    public void updateBicycleWithInvalidNameTest() throws Exception {
+        final String bicycleJson = "{\"id\":\"500\",\"vendor\":\"Orbea\",\"name\":\"\",\"price\":2200.00}";
+        Mockito.when(bicycleService.updateBicycle(Mockito.anyString(), Mockito.any(Bicycle.class)))
+                .thenReturn(null);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put("/bicycles/500")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(bicycleJson)
+                .contentType(MediaType.APPLICATION_JSON);
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        MockHttpServletResponse response = result.getResponse();
+
+        logger.info(String.valueOf(response.getStatus()));
+
+        assertThat(response.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    @DisplayName("Negative test for updating existing bicycle with empty vendor")
+    public void updateBicycleWithInvalidVendorTest() throws Exception {
+        final String bicycleJson = "{\"id\":\"500\",\"vendor\":\"\",\"name\":\"Orca\",\"price\":2200.00}";
+        Mockito.when(bicycleService.updateBicycle(Mockito.anyString(), Mockito.any(Bicycle.class)))
+                .thenReturn(null);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put("/bicycles/500")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(bicycleJson)
+                .contentType(MediaType.APPLICATION_JSON);
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        MockHttpServletResponse response = result.getResponse();
+
+        logger.info(String.valueOf(response.getStatus()));
+
+        assertThat(response.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    @DisplayName("Negative test for updating existing bicycle with invalid price")
+    public void updateBicycleWithInvalidPriceTest() throws Exception {
+        final String bicycleJson = "{\"id\":\"500\",\"vendor\":\"Orbea\",\"name\":\"Orca\",\"price\":0}";
+        Mockito.when(bicycleService.updateBicycle(Mockito.anyString(), Mockito.any(Bicycle.class)))
+                .thenReturn(null);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put("/bicycles/500")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(bicycleJson)
+                .contentType(MediaType.APPLICATION_JSON);
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        MockHttpServletResponse response = result.getResponse();
+
+        logger.info(String.valueOf(response.getStatus()));
+
+        assertThat(response.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    @DisplayName("Negative test for updating existing bicycle with invalid id")
+    public void updateBicycleWithInvalidIdTest() throws Exception {
+        final String bicycleJson = "{\"id\":\"\",\"vendor\":\"Orbea\",\"name\":\"Orca\",\"price\":2200.00}";
+        Mockito.when(bicycleService.updateBicycle(Mockito.anyString(), Mockito.any(Bicycle.class)))
+                .thenReturn(null);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put("/bicycles/500")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(bicycleJson)
+                .contentType(MediaType.APPLICATION_JSON);
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        MockHttpServletResponse response = result.getResponse();
+
+        logger.info(String.valueOf(response.getStatus()));
+
+        assertThat(response.getStatus()).isEqualTo(400);
+    }
+
+    @Test
     @DisplayName("Test for deleting existing bicycle")
     public void deleteBicycleTest() throws Exception {
         Mockito.when(bicycleService.deleteBicycle("500"))
