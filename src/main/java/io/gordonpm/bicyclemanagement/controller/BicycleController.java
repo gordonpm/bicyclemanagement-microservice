@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @Validated
+@RequestMapping("/bicycles")
 public class BicycleController {
 
     @Autowired
@@ -33,12 +34,12 @@ public class BicycleController {
         bicycleService.addBicycle(canyonBicycle);
     }
 
-    @GetMapping("/bicycles")
+    @GetMapping
     public List<Bicycle> getAllBicycles() {
         return bicycleService.getAllBicycles();
     }
 
-    @GetMapping("/bicycles/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getBicycle(@PathVariable String id) {
         Bicycle bicycle = bicycleService.getBicycle(id);
         if (bicycle != null) {
@@ -47,7 +48,7 @@ public class BicycleController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/bicycles")
+    @PostMapping
     public ResponseEntity<?> addBicycle(@RequestBody @Valid Bicycle newBicycle) {
         Bicycle bicycle = bicycleService.addBicycle(newBicycle);
 
@@ -62,7 +63,7 @@ public class BicycleController {
         }
     }
 
-    @PutMapping("/bicycles/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateBicycle(@PathVariable String id, @RequestBody @Valid Bicycle bicycle) {
         Bicycle updatedBicycle = bicycleService.updateBicycle(id, bicycle);
         if (updatedBicycle != null) {
@@ -72,7 +73,7 @@ public class BicycleController {
         }
     }
 
-    @DeleteMapping("/bicycles/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBicycle(@PathVariable String id) {
         boolean isFound = bicycleService.deleteBicycle(id);
         if (!isFound) {
