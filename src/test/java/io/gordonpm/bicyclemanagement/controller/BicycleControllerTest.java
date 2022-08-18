@@ -26,7 +26,7 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@WebMvcTest()
+@WebMvcTest
 public class BicycleControllerTest {
     private final Logger logger = LoggerFactory.getLogger(BicycleControllerTest.class);
 
@@ -67,8 +67,6 @@ public class BicycleControllerTest {
                 .accept(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        logger.info(String.valueOf(result.getResponse().getStatus()));
-
         assertThat(result.getResponse().getStatus()).isEqualTo(404);
     }
 
@@ -104,8 +102,6 @@ public class BicycleControllerTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
 
-        logger.info(String.valueOf(response.getStatus()));
-
         assertThat(response.getStatus()).isEqualTo(201);
         assertEquals("http://localhost/bicycles/500",
                 response.getHeader(HttpHeaders.LOCATION));
@@ -125,8 +121,6 @@ public class BicycleControllerTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
 
-        logger.info(String.valueOf(response.getStatus()));
-
         assertThat(response.getStatus()).isEqualTo(400);
     }
 
@@ -143,8 +137,6 @@ public class BicycleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
-
-        logger.info(String.valueOf(response.getStatus()));
 
         assertThat(response.getStatus()).isEqualTo(400);
     }
@@ -163,8 +155,6 @@ public class BicycleControllerTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
 
-        logger.info(String.valueOf(response.getStatus()));
-
         assertThat(response.getStatus()).isEqualTo(400);
     }
 
@@ -181,8 +171,6 @@ public class BicycleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
-
-        logger.info(String.valueOf(response.getStatus()));
 
         assertThat(response.getStatus()).isEqualTo(400);
     }
@@ -223,8 +211,6 @@ public class BicycleControllerTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
 
-        logger.info(String.valueOf(response.getStatus()));
-
         assertThat(response.getStatus()).isEqualTo(400);
     }
 
@@ -241,8 +227,6 @@ public class BicycleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
-
-        logger.info(String.valueOf(response.getStatus()));
 
         assertThat(response.getStatus()).isEqualTo(400);
     }
@@ -261,8 +245,6 @@ public class BicycleControllerTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
 
-        logger.info(String.valueOf(response.getStatus()));
-
         assertThat(response.getStatus()).isEqualTo(400);
     }
 
@@ -279,8 +261,6 @@ public class BicycleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
-
-        logger.info(String.valueOf(response.getStatus()));
 
         assertThat(response.getStatus()).isEqualTo(400);
     }
